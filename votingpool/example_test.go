@@ -22,11 +22,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/conformal/btcnet"
-	"github.com/conformal/btcwallet/votingpool"
-	"github.com/conformal/btcwallet/waddrmgr"
-	"github.com/conformal/btcwallet/walletdb"
-	_ "github.com/conformal/btcwallet/walletdb/bdb"
+	"github.com/monetas/btcnet"
+	"github.com/monetas/btcwallet/votingpool"
+	"github.com/monetas/btcwallet/waddrmgr"
+	"github.com/monetas/btcwallet/walletdb"
+	_ "github.com/monetas/btcwallet/walletdb/bdb"
 )
 
 func Example_basic() {

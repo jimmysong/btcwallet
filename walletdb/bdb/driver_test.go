@@ -22,8 +22,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/conformal/btcwallet/walletdb"
-	_ "github.com/conformal/btcwallet/walletdb/bdb"
+	"github.com/monetas/btcwallet/walletdb"
+	_ "github.com/monetas/btcwallet/walletdb/bdb"
 )
 
 // dbType is the database type name for this driver.

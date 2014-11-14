@@ -26,7 +26,7 @@ package waddrmgr
 import (
 	"errors"
 
-	"github.com/conformal/btcwallet/snacl"
+	"github.com/monetas/btcwallet/snacl"
 )
 
 // TstMaxRecentHashes makes the unexported maxRecentHashes constant available

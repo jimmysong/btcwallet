@@ -20,8 +20,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/conformal/bolt"
-	"github.com/conformal/btcwallet/walletdb"
+	"github.com/monetas/bolt"
+	"github.com/monetas/btcwallet/walletdb"
 )
 
 // convertErr converts some bolt errors to the equivalent walletdb error.

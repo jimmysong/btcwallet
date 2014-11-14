@@ -20,11 +20,11 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/conformal/btcscript"
-	"github.com/conformal/btcutil"
-	"github.com/conformal/btcutil/hdkeychain"
-	"github.com/conformal/btcwallet/waddrmgr"
-	"github.com/conformal/btcwallet/walletdb"
+	"github.com/monetas/btcscript"
+	"github.com/monetas/btcutil"
+	"github.com/monetas/btcutil/hdkeychain"
+	"github.com/monetas/btcwallet/waddrmgr"
+	"github.com/monetas/btcwallet/walletdb"
 )
 
 const (
