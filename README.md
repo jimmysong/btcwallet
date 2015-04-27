@@ -1,3 +1,18 @@
+payment codes
+=============
+
+This is a fork of btcwallet which allows payment codes.
+
+TODO:
+
+1. RPC call - `getpaymentcode` returns my payment code to give to others
+2. RPC call - `sendpaymentcode` sends my payment code to a given payment code
+3. Auto-scan payment code receipt address for other payment codes
+4. RPC call - `listpaymentaddresses` returns list of payment codes from the "receipt address"
+5. RPC call - `sendtopaymentaddress` sends bitcoins to a particular payment address
+6. Auto-scan addresses derived from any payment codes from the receipt address and add those to the `getbalance` call.
+
+
 btcwallet
 =========
 
