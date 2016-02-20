@@ -1,0 +1,31 @@
+1. locker (wlocker)
+ - responsible for encrypt/decrypt/concurrency/write to disk
+ - can encrypt or decrypt
+ - can lock or unlock
+ - gets from/writes to disk encrypted bytestream
+2. account controller (wacctmgr)
+ - holds account metadata and references to accounts
+ - accounts no longer are uint32's, they're strings
+ - accounts now have a description field
+ - accounts also have a type which defines which implementation of the account interface is used
+ - account is no longer associated with a BIP44 account
+ - serializes/unserializes account metadata to a byte stream
+ - can tell you which account addresses have which utxos
+ - stores the utxos in the db in a standard way with an account
+ - interacts with account plugin, locker, sync package and address controller
+3. account "plugin"/interface (wacctmgr/bip0044, etc)
+ - serialize/unserializes addresses to a byte stream
+ - serialize/unserialize any priv/pub seed data to a byte stream
+ - provides addresses which get looked up in address controller
+ - registers to controller various callbacks
+ - lets the controller know what capabilities it has
+ - clears sensitive data
+ - provides a state for serialization (how many external addrs, etc)
+ - interacts with serialization package
+4. address controller (waddrmgr)
+ - adds descriptions for addresses
+ - adds descriptions to tx's where this address sends or receives
+ - allows import/export of the address/tx descriptions
+ - interacts with serialization package
+5. standard serialization package (btcutil/serialize?)
+ - can serialize/unserialize uint32, uint64, etc to a bytestream
