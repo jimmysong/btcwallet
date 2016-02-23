@@ -15,13 +15,13 @@
  */
 
 /*
-This test file is part of the waddrmgr package rather than than the
-waddrmgr_test package so it can bridge access to the internals to properly test
+This test file is part of the wlocker package rather than than the
+wlocker_test package so it can bridge access to the internals to properly test
 cases which are either not possible or can't reliably be tested via the public
 interface. The functions are only exported while the tests are being run.
 */
 
-package waddrmgr
+package wlocker
 
 import (
 	"errors"
@@ -37,7 +37,7 @@ var TstMaxRecentHashes = maxRecentHashes
 // for change when the tests are run.
 var TstLatestMgrVersion = &latestMgrVersion
 
-// Replace the Manager.newSecretKey function with the given one and calls
+// Replace the Locker.newSecretKey function with the given one and calls
 // the callback function. Afterwards the original newSecretKey
 // function will be restored.
 func TstRunWithReplacedNewSecretKey(callback func()) {
@@ -52,8 +52,8 @@ func TstRunWithReplacedNewSecretKey(callback func()) {
 }
 
 // TstCheckPublicPassphrase returns true if the provided public passphrase is
-// correct for the manager.
-func (m *Manager) TstCheckPublicPassphrase(pubPassphrase []byte) bool {
+// correct for the locker.
+func (m *Locker) TstCheckPublicPassphrase(pubPassphrase []byte) bool {
 	secretKey := snacl.SecretKey{Key: &snacl.CryptoKey{}}
 	secretKey.Parameters = m.masterKeyPub.Parameters
 	err := secretKey.DeriveKey(&pubPassphrase)
@@ -83,7 +83,7 @@ func (c *failingCryptoKey) Decrypt(in []byte) ([]byte, error) {
 // TstRunWithFailingCryptoKeyPriv runs the provided callback with the
 // private crypto key replaced with a version that fails to help test error
 // paths.
-func TstRunWithFailingCryptoKeyPriv(m *Manager, callback func()) {
+func TstRunWithFailingCryptoKeyPriv(m *Locker, callback func()) {
 	orig := m.cryptoKeyPriv
 	defer func() {
 		m.cryptoKeyPriv = orig
@@ -92,5 +92,3 @@ func TstRunWithFailingCryptoKeyPriv(m *Manager, callback func()) {
 	callback()
 }
 
-// TstDefaultAccountName is the constant defaultAccountName exported for tests.
-const TstDefaultAccountName = defaultAccountName

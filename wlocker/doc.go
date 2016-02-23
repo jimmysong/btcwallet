@@ -15,7 +15,7 @@
  */
 
 /*
-Package waddrmgr provides a secure hierarchical deterministic wallet address
+Package wlocker provides a secure hierarchical deterministic wallet address
 manager.
 
 Overview
@@ -164,4 +164,4 @@ This package includes concepts outlined by the following BIPs:
 		BIP0043 (https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki)
 		BIP0044 (https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki)
 */
-package waddrmgr
+package wlocker

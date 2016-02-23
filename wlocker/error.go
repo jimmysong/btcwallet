@@ -14,13 +14,10 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package waddrmgr
+package wlocker
 
 import (
 	"fmt"
-	"strconv"
-
-	"github.com/btcsuite/btcutil/hdkeychain"
 )
 
 var (
@@ -54,6 +51,9 @@ const (
 	// ErrAlreadyExists indicates that the specified database already exists.
 	ErrAlreadyExists
 
+	ErrCrypto
+	ErrInvalidKeyType
+
 	// ErrLocked indicates that an operation, which requires the account
 	// manager to be unlocked, was requested on a locked account manager.
 	ErrLocked
@@ -73,6 +73,8 @@ const (
 
 // Map of ErrorCode values back to their constant names for pretty printing.
 var errorCodeStrings = map[ErrorCode]string{
+	ErrCrypto:            "ErrCrypto",
+	ErrInvalidKeyType:    "ErrInvalidKeyType",
 	ErrDatabase:          "ErrDatabase",
 	ErrUpgrade:           "ErrUpgrade",
 	ErrNoExist:           "ErrNoExist",

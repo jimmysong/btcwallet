@@ -14,43 +14,32 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package waddrmgr_test
+package wlocker_test
 
 import (
 	"errors"
 	"fmt"
 	"testing"
 
-	"github.com/btcsuite/btcwallet/waddrmgr"
+	"github.com/btcsuite/btcwallet/wlocker"
 )
 
 // TestErrorCodeStringer tests the stringized output for the ErrorCode type.
 func TestErrorCodeStringer(t *testing.T) {
 	tests := []struct {
-		in   waddrmgr.ErrorCode
+		in   wlocker.ErrorCode
 		want string
 	}{
-		{waddrmgr.ErrDatabase, "ErrDatabase"},
-		{waddrmgr.ErrUpgrade, "ErrUpgrade"},
-		{waddrmgr.ErrKeyChain, "ErrKeyChain"},
-		{waddrmgr.ErrCrypto, "ErrCrypto"},
-		{waddrmgr.ErrInvalidKeyType, "ErrInvalidKeyType"},
-		{waddrmgr.ErrNoExist, "ErrNoExist"},
-		{waddrmgr.ErrAlreadyExists, "ErrAlreadyExists"},
-		{waddrmgr.ErrCoinTypeTooHigh, "ErrCoinTypeTooHigh"},
-		{waddrmgr.ErrAccountNumTooHigh, "ErrAccountNumTooHigh"},
-		{waddrmgr.ErrLocked, "ErrLocked"},
-		{waddrmgr.ErrWatchingOnly, "ErrWatchingOnly"},
-		{waddrmgr.ErrInvalidAccount, "ErrInvalidAccount"},
-		{waddrmgr.ErrAddressNotFound, "ErrAddressNotFound"},
-		{waddrmgr.ErrAccountNotFound, "ErrAccountNotFound"},
-		{waddrmgr.ErrDuplicateAddress, "ErrDuplicateAddress"},
-		{waddrmgr.ErrDuplicateAccount, "ErrDuplicateAccount"},
-		{waddrmgr.ErrTooManyAddresses, "ErrTooManyAddresses"},
-		{waddrmgr.ErrWrongPassphrase, "ErrWrongPassphrase"},
-		{waddrmgr.ErrWrongNet, "ErrWrongNet"},
-		{waddrmgr.ErrCallBackBreak, "ErrCallBackBreak"},
-		{waddrmgr.ErrEmptyPassphrase, "ErrEmptyPassphrase"},
+		{wlocker.ErrDatabase, "ErrDatabase"},
+		{wlocker.ErrUpgrade, "ErrUpgrade"},
+		{wlocker.ErrCrypto, "ErrCrypto"},
+		{wlocker.ErrInvalidKeyType, "ErrInvalidKeyType"},
+		{wlocker.ErrNoExist, "ErrNoExist"},
+		{wlocker.ErrAlreadyExists, "ErrAlreadyExists"},
+		{wlocker.ErrLocked, "ErrLocked"},
+		{wlocker.ErrWrongPassphrase, "ErrWrongPassphrase"},
+		{wlocker.ErrCallBackBreak, "ErrCallBackBreak"},
+		{wlocker.ErrEmptyPassphrase, "ErrEmptyPassphrase"},
 		{0xffff, "Unknown ErrorCode (65535)"},
 	}
 	t.Logf("Running %d tests", len(tests))
@@ -64,48 +53,36 @@ func TestErrorCodeStringer(t *testing.T) {
 	}
 }
 
-// TestManagerError tests the error output for the ManagerError type.
-func TestManagerError(t *testing.T) {
+// TestLockerError tests the error output for the LockerError type.
+func TestLockerError(t *testing.T) {
 	tests := []struct {
-		in   waddrmgr.ManagerError
+		in   wlocker.LockerError
 		want string
 	}{
-		// Manager level error.
+		// Locker level error.
 		{
-			waddrmgr.ManagerError{Description: "human-readable error"},
+			wlocker.LockerError{Description: "human-readable error"},
 			"human-readable error",
 		},
 
 		// Encapsulated database error.
 		{
-			waddrmgr.ManagerError{
+			wlocker.LockerError{
 				Description: "failed to store master private " +
 					"key parameters",
-				ErrorCode: waddrmgr.ErrDatabase,
+				ErrorCode: wlocker.ErrDatabase,
 				Err:       fmt.Errorf("underlying db error"),
 			},
 			"failed to store master private key parameters: " +
 				"underlying db error",
 		},
 
-		// Encapsulated key chain error.
-		{
-			waddrmgr.ManagerError{
-				Description: "failed to derive extended key " +
-					"branch 0",
-				ErrorCode: waddrmgr.ErrKeyChain,
-				Err:       fmt.Errorf("underlying error"),
-			},
-			"failed to derive extended key branch 0: underlying " +
-				"error",
-		},
-
 		// Encapsulated crypto error.
 		{
-			waddrmgr.ManagerError{
+			wlocker.LockerError{
 				Description: "failed to decrypt account 0 " +
 					"private key",
-				ErrorCode: waddrmgr.ErrCrypto,
+				ErrorCode: wlocker.ErrCrypto,
 				Err:       fmt.Errorf("underlying error"),
 			},
 			"failed to decrypt account 0 private key: underlying " +
@@ -128,40 +105,40 @@ func TestManagerError(t *testing.T) {
 func TestIsError(t *testing.T) {
 	tests := []struct {
 		err  error
-		code waddrmgr.ErrorCode
+		code wlocker.ErrorCode
 		exp  bool
 	}{
 		{
-			err: waddrmgr.ManagerError{
-				ErrorCode: waddrmgr.ErrDatabase,
+			err: wlocker.LockerError{
+				ErrorCode: wlocker.ErrDatabase,
 			},
-			code: waddrmgr.ErrDatabase,
+			code: wlocker.ErrDatabase,
 			exp:  true,
 		},
 		{
-			// package should never return *ManagerError
-			err: &waddrmgr.ManagerError{
-				ErrorCode: waddrmgr.ErrDatabase,
+			// package should never return *LockerError
+			err: &wlocker.LockerError{
+				ErrorCode: wlocker.ErrDatabase,
 			},
-			code: waddrmgr.ErrDatabase,
+			code: wlocker.ErrDatabase,
 			exp:  false,
 		},
 		{
-			err: waddrmgr.ManagerError{
-				ErrorCode: waddrmgr.ErrCrypto,
+			err: wlocker.LockerError{
+				ErrorCode: wlocker.ErrCrypto,
 			},
-			code: waddrmgr.ErrDatabase,
+			code: wlocker.ErrDatabase,
 			exp:  false,
 		},
 		{
-			err:  errors.New("not a ManagerError"),
-			code: waddrmgr.ErrDatabase,
+			err:  errors.New("not a LockerError"),
+			code: wlocker.ErrDatabase,
 			exp:  false,
 		},
 	}
 
 	for i, test := range tests {
-		got := waddrmgr.IsError(test.err, test.code)
+		got := wlocker.IsError(test.err, test.code)
 		if got != test.exp {
 			t.Errorf("Test %d: got %v expected %v", i, got, test.exp)
 		}

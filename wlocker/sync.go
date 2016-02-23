@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package waddrmgr
+package wlocker
 
 import (
 	"sync"
@@ -30,22 +30,22 @@ const (
 )
 
 // BlockStamp defines a block (by height and a unique hash) and is
-// used to mark a point in the blockchain that an address manager element is
+// used to mark a point in the blockchain that an address locker element is
 // synced to.
 type BlockStamp struct {
 	Height int32
 	Hash   wire.ShaHash
 }
 
-// syncState houses the sync state of the manager.  It consists of the recently
+// syncState houses the sync state of the locker.  It consists of the recently
 // seen blocks as height, as well as the start and current sync block stamps.
 type syncState struct {
 	// startBlock is the first block that can be safely used to start a
-	// rescan.  It is either the block the manager was created with, or
+	// rescan.  It is either the block the locker was created with, or
 	// the earliest block provided with imported addresses or scripts.
 	startBlock BlockStamp
 
-	// syncedTo is the current block the addresses in the manager are known
+	// syncedTo is the current block the addresses in the locker are known
 	// to be synced against.
 	syncedTo BlockStamp
 
@@ -132,24 +132,24 @@ func (it *BlockIterator) BlockStamp() BlockStamp {
 // The iterator starts at the most recently-added block, and Prev should
 // be used to access earlier blocks.
 //
-// NOTE: Ideally this should not really be a part of the address manager as it
+// NOTE: Ideally this should not really be a part of the address locker as it
 // is intended for syncing purposes.   It is being exposed here for now to go
 // with the other syncing code.  Ultimately, all syncing code should probably
 // go into its own package and share the data store.
-func (m *Manager) NewIterateRecentBlocks() *BlockIterator {
+func (m *Locker) NewIterateRecentBlocks() *BlockIterator {
 	m.mtx.RLock()
 	defer m.mtx.RUnlock()
 
 	return m.syncState.iter(&m.mtx)
 }
 
-// SetSyncedTo marks the address manager to be in sync with the recently-seen
+// SetSyncedTo marks the address locker to be in sync with the recently-seen
 // block described by the blockstamp.  When the provided blockstamp is nil,
-// the oldest blockstamp of the block the manager was created at and of all
-// imported addresses will be used.  This effectively allows the manager to be
+// the oldest blockstamp of the block the locker was created at and of all
+// imported addresses will be used.  This effectively allows the locker to be
 // marked as unsynced back to the oldest known point any of the addresses have
 // appeared in the block chain.
-func (m *Manager) SetSyncedTo(bs *BlockStamp) error {
+func (m *Locker) SetSyncedTo(bs *BlockStamp) error {
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
@@ -231,10 +231,10 @@ func (m *Manager) SetSyncedTo(bs *BlockStamp) error {
 }
 
 // SyncedTo returns details about the block height and hash that the address
-// manager is synced through at the very least.  The intention is that callers
+// locker is synced through at the very least.  The intention is that callers
 // can use this information for intelligently initiating rescans to sync back to
 // the best chain from the last known good block.
-func (m *Manager) SyncedTo() BlockStamp {
+func (m *Locker) SyncedTo() BlockStamp {
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
